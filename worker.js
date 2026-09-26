@@ -58,37 +58,33 @@ export default {
       const filename = `dummy_${sizeLabel}_${timestampStr}.bin`;
 
       // Cloudflare Edge Stream (ReadableStream) による非圧縮ランダムデータ動的ストリーミング
+      // pull(controller) を使用することでバックプレッシャー（通信速度に応じた制御）を適用し、
+      // メモリ制限超過や途中切断（~7MB制限）を防いで1GBまで確実に配信します。
+      let bytesSent = 0;
+      const chunkSize = 64 * 1024; // 64KB (Web Crypto Limit per call)
+
       const stream = new ReadableStream({
-        start(controller) {
-          let bytesSent = 0;
-          const chunkSize = 64 * 1024; // 64KB (Web Crypto Limit per call)
+        pull(controller) {
+          try {
+            // クライアントの読み込みバッファ（desiredSize）に合わせてチャンクを出力
+            while (bytesSent < totalBytes && (controller.desiredSize === null || controller.desiredSize > 0)) {
+              const remaining = totalBytes - bytesSent;
+              const currentChunkSize = Math.min(chunkSize, remaining);
+              const chunk = new Uint8Array(currentChunkSize);
 
-          function produceChunks() {
-            try {
-              while (bytesSent < totalBytes) {
-                const remaining = totalBytes - bytesSent;
-                const currentChunkSize = Math.min(chunkSize, remaining);
-                const chunk = new Uint8Array(currentChunkSize);
+              // 暗号学的に安全な乱数（圧縮不可能な最高エントロピーデータ）
+              crypto.getRandomValues(chunk);
 
-                // 暗号学的に安全な乱数（圧縮不可能な最高エントロピーデータ）
-                crypto.getRandomValues(chunk);
-
-                bytesSent += currentChunkSize;
-                controller.enqueue(chunk);
-
-                // 巨大ファイルの場合、イベントループをブロックしないよう非同期スケジューリング
-                if (bytesSent % (2 * 1024 * 1024) === 0) { // 2MBごとにマイクロタスクへ譲歩
-                  setTimeout(produceChunks, 0);
-                  return;
-                }
-              }
-              controller.close();
-            } catch (err) {
-              controller.error(err);
+              bytesSent += currentChunkSize;
+              controller.enqueue(chunk);
             }
-          }
 
-          produceChunks();
+            if (bytesSent >= totalBytes) {
+              controller.close();
+            }
+          } catch (err) {
+            controller.error(err);
+          }
         },
       });
 
