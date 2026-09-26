@@ -2,6 +2,11 @@
 
 スマートフォン等のモバイル通信（4G/5G）において、実際のデータ通信量を正確に測定・検証するための Flask Web アプリケーションです。
 
+> **💡 GitHub Pages で公開したい場合について**  
+> GitHub Pages は **静的ファイル (HTML/CSS/JS) 専用ホスティング** のため、Python/Flask のサーバー処理や動的ストリーミング、サーバー側での通信ログ記録を GitHub Pages 単体で動かすことはできません。  
+> GitHub Pages を利用する場合は、**「GitHub Pages (UI) ＋ 無料クラウドサーバー (Render.com 等で Flask 稼働)」** の組み合わせにするか、**Render.com や Railway にまとめてデプロイ** するのが最も簡単でおすすめです。（詳細は下記「9. GitHub Pages / クラウド環境への公開方法」を参照）
+
+
 ## 特長・仕組み
 
 - **非圧縮・高エントロピーデータ**: `os.urandom` による疑似乱数バイト列をストリーミング生成します。データエントロピーが最高レベル（理論限界に近い8bit/byte）のため、gzip/Brotliなどの圧縮アルゴリズムで圧縮されず、実際の転送量が物理ネットワークにそのまま流れます。
@@ -234,3 +239,49 @@ sudo systemctl status dummy-download
 2026-09-26 18:00:00 [INFO] [DOWNLOAD START] Request for 100MB (100,000,000 bytes) from IP: 203.0.113.45
 2026-09-26 18:00:05 [INFO] [DOWNLOAD COMPLETE] Date: 2026-09-26 18:00:05 | Client IP: 203.0.113.45 | User-Agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)..." | Selected Size: 100MB | Sent Bytes: 100,000,000 / 100,000,000 bytes (100.00 MB) | Time: 5.21s | Avg Speed: 19.19 MB/s (153.55 Mbps)
 ```
+
+---
+
+## 9. GitHub Pages / クラウド環境への公開方法
+
+### なぜ GitHub Pages だけでは動作しないのか？
+GitHub Pages は **静的ファイル (HTML/CSS/JS) 専用のホスティング** です。  
+Python などのサーバーサイドプログラムを動作させることができないため、**Flask によるリアルタイム非圧縮データストリーミング** や **サーバー側ログ保存** を GitHub Pages 単体で動かすことはできません。
+
+また、ブラウザ上の JavaScript のみで 1GB のランダムデータを生成しても、それは **端末ローカルのメモリ内で生成されるため、モバイル通信量（ギガ）は消費されません**。
+
+---
+
+### おすすめの公開パターン 2選
+
+#### パターン A: Render.com（無料クラウド）に一括デプロイ（最も簡単）
+フロント（UI）もバックエンド（Flask）もまとめて Render.com などの無料 Pass プラットフォームにデプロイする方法です。
+
+1. **GitHub にリポジトリを作成**
+   このプロジェクトのコード一式を GitHub リポジトリに push します。
+2. **Render.com にサインアップ**
+   [https://render.com/](https://render.com/) にアクセスし、アカウントを作成します。
+3. **新規 Web Service を作成**
+   - 「New +」→「Web Service」を選択
+   - 自分の GitHub リポジトリを連携
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `gunicorn app:app`
+   - **Environment Variables**:
+     `DOWNLOAD_TOKEN`: `任意のトークン文字列`
+4. **デプロイ完了**
+   発行される URL（例: `https://giga-test.onrender.com/?token=your_token`）へアクセスすれば、スマホから即座に通信量テストを行えます。
+
+---
+
+#### パターン B: UI は GitHub Pages ＋ ダウンロード処理は クラウドサーバー
+UI（HTML）のみを GitHub Pages でホストし、ダウンロードボタンのリンク先を自前の Flask サーバー URL（Render や VPS）に指定する構成です。
+
+1. **`index.html` 内のダウンロード URL を変更**
+   各ダウンロードリンク（`href`）を、クラウドサーバーの絶対パスにします：
+   `https://your-flask-server.onrender.com/download/100MB?token=xxx`
+2. **CORS ヘッダーの許可（必要に応じて）**
+   同一ドメイン外から直接アンカータグ `<a href="...">` でダウンロードさせる場合は、通常のリンク遷移となるため CORS の設定も不要でそのまま動作します。
+3. **GitHub Pages の設定**
+   GitHub リポジトリの `Settings` → `Pages` から `main` ブランチを選択して公開します。
+
