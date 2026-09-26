@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>モバイルデータ通信量テスト</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: rgba(22, 27, 34, 0.85);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --warning-bg: rgba(239, 68, 68, 0.15);
+            --warning-border: rgba(239, 68, 68, 0.4);
+            --warning-text: #fca5a5;
+            --btn-gradient-1: linear-gradient(135deg, #2563eb, #3b82f6);
+            --btn-gradient-2: linear-gradient(135deg, #7c3aed, #9333ea);
+            --btn-gradient-3: linear-gradient(135deg, #db2777, #e11d48);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px 48px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 540px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.25);
+        }
+
+        .header-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .warning-card {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            backdrop-filter: blur(8px);
+        }
+
+        .warning-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            color: #ef4444;
+            margin-top: 2px;
+        }
+
+        .warning-text {
+            font-size: 0.925rem;
+            line-height: 1.55;
+            color: var(--warning-text);
+            font-weight: 600;
+        }
+
+        .auth-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+        }
+
+        .auth-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .token-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .token-input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(15, 23, 42, 0.6);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .token-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .token-submit-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: var(--btn-gradient-1);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.15s, opacity 0.15s;
+        }
+
+        .token-submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .download-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 22px;
+            backdrop-filter: blur(12px);
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-card:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .size-label {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .byte-count {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: monospace;
+            letter-spacing: -0.01em;
+        }
+
+        .size-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 14px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.05rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            transition: transform 0.15s, filter 0.15s, box-shadow 0.15s;
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+
+        .download-btn.btn-100mb {
+            background: var(--btn-gradient-1);
+        }
+
+        .download-btn.btn-500mb {
+            background: var(--btn-gradient-2);
+        }
+
+        .download-btn.btn-1gb {
+            background: var(--btn-gradient-3);
+        }
+
+        .download-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .footer {
+            margin-top: 36px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .info-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.775rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        /* モーダル/通知スタイル */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                    <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                    <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                </svg>
+            </div>
+            <h1>モバイルデータ通信量テスト</h1>
+            <p class="subtitle">大容量ダミーファイル配布サーバー</p>
+        </header>
+
+        {% if not authorized %}
+        <div class="auth-card">
+            <h2>🔐 アクセス制限</h2>
+            <p>この サーバーを利用するにはアクセス用トークンが必要です。トークンを入力してください。</p>
+            <form class="token-form" action="/" method="GET">
+                <input type="password" name="token" class="token-input" placeholder="トークンを入力..." value="{{ provided_token }}" required autofocus>
+                <button type="submit" class="token-submit-btn">認証して進む</button>
+            </form>
+        </div>
+        {% else %}
+
+        <div style="text-align: center;">
+            <div class="info-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                ストリーミング非圧縮生成 / キャッシュ無効化済み
+            </div>
+        </div>
+
+        <div class="warning-card">
+            <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <div class="warning-text">
+                Wi-FiをOFFにしてからダウンロードしてください。ダウンロードしたデータは通信量として消費されます。
+            </div>
+        </div>
+
+        <div class="cards-list">
+            <!-- 100MB Card -->
+            <div class="download-card">
+                <div class="card-header">
+                    <div class="size-label">100 MB</div>
+                    <div class="byte-count">100,000,000 bytes</div>
+                </div>
+                <div class="size-desc">軽量テスト・高速通信テスト用</div>
+                {% set download_url_100 = url_for('download', size_label='100MB', token=provided_token) if provided_token else url_for('download', size_label='100MB') %}
+                <a href="{{ download_url_100 }}" class="download-btn btn-100mb" onclick="startNotify('100MB')">
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    100MBをダウンロード
+                </a>
+            </div>
+
+            <!-- 500MB Card -->
+            <div class="download-card">
+                <div class="card-header">
+                    <div class="size-label">500 MB</div>
+                    <div class="byte-count">500,000,000 bytes</div>
+                </div>
+                <div class="size-desc">標準データ消費検証用</div>
+                {% set download_url_500 = url_for('download', size_label='500MB', token=provided_token) if provided_token else url_for('download', size_label='500MB') %}
+                <a href="{{ download_url_500 }}" class="download-btn btn-500mb" onclick="startNotify('500MB')">
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    500MBをダウンロード
+                </a>
+            </div>
+
+            <!-- 1GB Card -->
+            <div class="download-card">
+                <div class="card-header">
+                    <div class="size-label">1 GB</div>
+                    <div class="byte-count">1,000,000,000 bytes</div>
+                </div>
+                <div class="size-desc">大容量通信・ギガ消費テスト用</div>
+                {% set download_url_1gb = url_for('download', size_label='1GB', token=provided_token) if provided_token else url_for('download', size_label='1GB') %}
+                <a href="{{ download_url_1gb }}" class="download-btn btn-1gb" onclick="startNotify('1GB')">
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    1GBをダウンロード
+                </a>
+            </div>
+        </div>
+
+        {% endif %}
+
+        <footer class="footer">
+            <p>※1GB = 1,000,000,000 Bytes (10進数計算)</p>
+            <p>データはメモリ/ディスクに保持されず、ストリーミング生成されます。</p>
+        </footer>
+    </div>
+
+    <div id="toast" class="toast">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span id="toast-text">ダウンロードを開始しました</span>
+    </div>
+
+    <script>
+        function startNotify(size) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            toastText.textContent = `${size} のダウンロードを開始しました。ブラウザのダウンロード通知をご確認ください。`;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4500);
+        }
+    </script>
+</body>
+</html>

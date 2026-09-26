@@ -1,0 +1,17 @@
+2026-09-26 17:59:50 [INFO] [DOWNLOAD START] Request for 100MB (100,000,000 bytes) from IP: 127.0.0.1
+2026-09-26 17:59:50 [INFO] Client disconnected early for size '100MB' (IP: 127.0.0.1)
+2026-09-26 17:59:50 [INFO] [DOWNLOAD COMPLETE] Date: 2026-09-26 17:59:50 | Client IP: 127.0.0.1 | User-Agent: "Werkzeug/3.1.8" | Selected Size: 100MB | Sent Bytes: 131,072 / 100,000,000 bytes (0.13 MB) | Time: 0.00s | Avg Speed: 259.07 MB/s (2072.59 Mbps)
+2026-09-26 17:59:50 [INFO] [DOWNLOAD START] Request for 1GB (1,000,000,000 bytes) from IP: 127.0.0.1
+2026-09-26 17:59:50 [INFO] Client disconnected early for size '1GB' (IP: 127.0.0.1)
+2026-09-26 17:59:50 [INFO] [DOWNLOAD COMPLETE] Date: 2026-09-26 17:59:50 | Client IP: 127.0.0.1 | User-Agent: "Werkzeug/3.1.8" | Selected Size: 1GB | Sent Bytes: 131,072 / 1,000,000,000 bytes (0.13 MB) | Time: 0.00s | Avg Speed: 249.10 MB/s (1992.77 Mbps)
+2026-09-26 17:59:50 [INFO] [DOWNLOAD START] Request for 500MB (500,000,000 bytes) from IP: 127.0.0.1
+2026-09-26 17:59:50 [INFO] Client disconnected early for size '500MB' (IP: 127.0.0.1)
+2026-09-26 17:59:50 [INFO] [DOWNLOAD COMPLETE] Date: 2026-09-26 17:59:50 | Client IP: 127.0.0.1 | User-Agent: "Werkzeug/3.1.8" | Selected Size: 500MB | Sent Bytes: 131,072 / 500,000,000 bytes (0.13 MB) | Time: 0.00s | Avg Speed: 0.00 MB/s (0.00 Mbps)
+2026-09-26 17:59:50 [WARNING] Unauthorized download attempt for size '100MB' from IP: 127.0.0.1
+2026-09-26 17:59:50 [INFO] [DOWNLOAD START] Request for 100MB (100,000,000 bytes) from IP: 127.0.0.1
+2026-09-26 17:59:50 [INFO] Client disconnected early for size '100MB' (IP: 127.0.0.1)
+2026-09-26 17:59:50 [INFO] [DOWNLOAD COMPLETE] Date: 2026-09-26 17:59:50 | Client IP: 127.0.0.1 | User-Agent: "Werkzeug/3.1.8" | Selected Size: 100MB | Sent Bytes: 131,072 / 100,000,000 bytes (0.13 MB) | Time: 0.00s | Avg Speed: 0.00 MB/s (0.00 Mbps)
+2026-09-26 18:01:06 [INFO] [DOWNLOAD START] Request for 100MB (100,000,000 bytes) from IP: 127.0.0.1
+2026-09-26 18:01:07 [INFO] [DOWNLOAD COMPLETE] Date: 2026-09-26 18:01:07 | Client IP: 127.0.0.1 | User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:156.0) Gecko/20100101 Firefox/156.0" | Selected Size: 100MB | Sent Bytes: 100,000,000 / 100,000,000 bytes (100.00 MB) | Time: 0.44s | Avg Speed: 229.62 MB/s (1836.96 Mbps)
+2026-09-26 18:01:17 [INFO] [DOWNLOAD START] Request for 1GB (1,000,000,000 bytes) from IP: 127.0.0.1
+2026-09-26 18:01:22 [INFO] [DOWNLOAD COMPLETE] Date: 2026-09-26 18:01:22 | Client IP: 127.0.0.1 | User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:156.0) Gecko/20100101 Firefox/156.0" | Selected Size: 1GB | Sent Bytes: 1,000,000,000 / 1,000,000,000 bytes (1000.00 MB) | Time: 4.94s | Avg Speed: 202.34 MB/s (1618.68 Mbps)
