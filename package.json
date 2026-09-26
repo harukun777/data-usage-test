@@ -1,0 +1,14 @@
+{
+  "name": "giga-test-cloudflare-worker",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Cloudflare Worker for Mobile Data Measurement (Dummy File Distribution Server)",
+  "main": "worker.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^3.100.0"
+  }
+}

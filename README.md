@@ -274,14 +274,32 @@ Python などのサーバーサイドプログラムを動作させることが�
 
 ---
 
-#### パターン B: UI は GitHub Pages ＋ ダウンロード処理は クラウドサーバー
-UI（HTML）のみを GitHub Pages でホストし、ダウンロードボタンのリンク先を自前の Flask サーバー URL（Render や VPS）に指定する構成です。
+#### パターン C: Cloudflare Workers (CF) で完全無料・爆速公開（超推奨 🔥）
 
-1. **`index.html` 内のダウンロード URL を変更**
-   各ダウンロードリンク（`href`）を、クラウドサーバーの絶対パスにします：
-   `https://your-flask-server.onrender.com/download/100MB?token=xxx`
-2. **CORS ヘッダーの許可（必要に応じて）**
-   同一ドメイン外から直接アンカータグ `<a href="...">` でダウンロードさせる場合は、通常のリンク遷移となるため CORS の設定も不要でそのまま動作します。
-3. **GitHub Pages の設定**
-   GitHub リポジトリの `Settings` → `Pages` から `main` ブランチを選択して公開します。
+Cloudflare (CF) の **Cloudflare Workers** を使えば、サーバー管理不要・サーバー代無料で、Cloudflare のエッジネットワーク（日本国内を含む世界中のデータセンター）から爆速でストリーミング生成・ギガ消費テストが可能です！
+
+1. **Cloudflare アカウントの準備**
+   [https://dash.cloudflare.com/](https://dash.cloudflare.com/) で無料アカウントを作成します。
+2. **`wrangler` CLI のインストール**
+   プロジェクトディレクトリでコマンドを実行：
+   ```bash
+   npm install
+   ```
+3. **Cloudflare へログイン**
+   ```bash
+   npx wrangler login
+   ```
+   ブラウザが開き、Cloudflare へのアクセスを承認します。
+4. **トークンの設定（オプション）**
+   `wrangler.jsonc` 内の `DOWNLOAD_TOKEN` を変更するか、以下のシークレット設定コマンドを実行します：
+   ```bash
+   npx wrangler secret put DOWNLOAD_TOKEN
+   ```
+5. **ワンコマンドでデプロイ**
+   ```bash
+   npx wrangler deploy
+   ```
+6. **デプロイ完了！**
+   デプロイ後に画面に表示される `https://giga-test-server.<your-subdomain>.workers.dev` にアクセスすれば、超高速なモバイルデータ通信量テストサーバーが完成します！
+
 
